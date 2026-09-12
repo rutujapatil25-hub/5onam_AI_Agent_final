@@ -29,13 +29,15 @@ import {
   UploadCloud,
 } from "lucide-react";
 
-const BACKEND_URL = "https://be-5-p-r.onrender.com";
+const BACKEND_URL = "http://127.0.0.1:7860";
 
 type Message = {
   id: string;
   text: string;
   isUser: boolean;
   isTyping?: boolean;
+  sources?: string[];
+
 };
 type Chat = {
   id: number;
@@ -582,6 +584,7 @@ export default function ZenTechOS() {
           id: Date.now().toString(),
           text: data.response,
           isUser: false,
+          sources: data.sources || [],
         });
       }
     } catch (err) {
@@ -1238,6 +1241,49 @@ export default function ZenTechOS() {
                                 __html: parseMarkdown(msg.text),
                               }}
                             />
+                            {msg.sources && msg.sources.length > 0 && (
+                             <div className="mt-4">
+                               <p
+                                 className={`text-xs font-semibold mb-2 ${
+                                   theme === "dark" ? "text-gray-400" : "text-gray-500"
+                                  }`}
+                               >
+                                  Sources
+                               </p>
+
+                               <div className="flex flex-wrap gap-2">
+                                {msg.sources.map((source, index) => (
+                                  <a
+                                    key={`${msg.id}-source-${index}`}
+                                    href={source}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`px-3 py-2 rounded-lg border text-xs transition-colors ${
+                                      theme === "dark"
+                                        ? "border-gray-700 bg-gray-800 hover:bg-gray-700 text-gray-300"
+                                        : "border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700"
+                                    }`}
+                                  >
+                                  <div className="flex flex-col">
+                                    <span className="font-semibold">
+                                      📖{" "}
+                                      {decodeURIComponent(
+                                        new URL(source).pathname
+                                          .split("/")
+                                          .pop()
+                                          ?.replace(/_/g, " ") || "Source"
+                                      )}
+                                    </span>
+
+                                    <span className="text-[11px] opacity-70 break-all mt-1">
+                                      {source}
+                                    </span>
+                                   </div> 
+                                 </a>
+                                ))}
+                            </div>
+                          </div>
+                         )}
                             <div className="flex items-center gap-4 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button
                                 onClick={() =>

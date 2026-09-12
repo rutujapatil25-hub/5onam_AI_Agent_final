@@ -24,8 +24,8 @@ export async function middleware(request: NextRequest) {
           supabaseResponse.cookies.set({ name, value, ...options });
         },
         remove(name: string, options: CookieOptions) {
-          request.cookies.delete({ name, ...options });
-          supabaseResponse.cookies.delete({ name, ...options });
+          request.cookies.delete( {name,  ...options } );
+          supabaseResponse.cookies.delete({ name,  ...options });
         },
       },
     },
